@@ -29,3 +29,13 @@ export type userType = {
 export type transInput = {
   totalAmount: number;
 };
+
+export type transType = {
+  _id: ObjectId;
+  userId: ObjectId;
+  totalAmount: number;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  order_id?: string;
+};

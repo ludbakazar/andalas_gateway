@@ -41,6 +41,80 @@ class TransactionModel {
       }
     );
   }
+
+  static async findByUserId(userId: string) {
+    if (!ObjectId.isValid(userId)) {
+      throw new Error("Invalid userId format");
+    }
+    const id = new ObjectId(userId);
+
+    const agg = [
+      {
+        $match: {
+          userId: id,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "cabang",
+        },
+      },
+      {
+        $unwind: {
+          path: "$cabang",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          "cabang.name": 1,
+          "cabang.kode": 1,
+          status: 1,
+          totalAmount: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ];
+
+    return await this.collection().aggregate(agg).toArray();
+  }
+
+  static async findAll() {
+    const agg = [
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "cabang",
+        },
+      },
+      {
+        $unwind: {
+          path: "$cabang",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          "cabang.name": 1,
+          "cabang.kode": 1,
+          status: 1,
+          totalAmount: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ];
+
+    return await this.collection().aggregate(agg).toArray();
+  }
 }
 
 export default TransactionModel;
