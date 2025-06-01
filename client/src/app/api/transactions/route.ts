@@ -1,10 +1,22 @@
 import TransactionModel from "@/config/db/models/transactionModel";
+import UserModel from "@/config/db/models/userModels";
 import errorHandler from "@/config/helpers/errorHandler";
+import { userType } from "@/type";
 import { ObjectId } from "mongodb";
 
 export async function POST(request: Request) {
   try {
     const id = request.headers.get("userId");
+    if (!id || !ObjectId.isValid(id)) {
+      return Response.json("Invalid or missing userId header", { status: 400 });
+    }
+
+    const userResult = await UserModel.findById(id);
+
+    if (!userResult) {
+      return Response.json("User not found", { status: 404 });
+    }
+    const user: userType = userResult as userType;
 
     if (!id) {
       return Response.json("Missing userId header", { status: 400 });
@@ -27,10 +39,12 @@ export async function POST(request: Request) {
 
     const parameter = {
       transaction_details: {
-        order_id: transaction.insertedId.toString(),
+        order_id: `${user.kode}-${transaction.insertedId.toString()}`,
         gross_amount: totalAmount,
       },
     };
+
+    console.log(parameter);
 
     const secret = process.env.SERVER_KEY_MIDTRANS;
     if (!secret) {

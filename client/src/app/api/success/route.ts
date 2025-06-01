@@ -6,9 +6,14 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { order_id } = body;
-    const transactionId = order_id.split("-")[0];
+    const transactionId = order_id.split("-")[1];
 
-    await TransactionModel.updateStatus(transactionId);
+    const dataUpdate = {
+      transactionId: transactionId,
+      order_id: order_id,
+    };
+
+    await TransactionModel.updateStatus(dataUpdate);
 
     return Response.json("ok transactions", { status: 200 });
   } catch (error) {

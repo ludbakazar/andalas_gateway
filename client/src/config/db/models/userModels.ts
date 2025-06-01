@@ -2,6 +2,7 @@ import { z } from "zod";
 import { database } from "../config/config";
 import { newUser } from "@/type";
 import { hashPass } from "@/config/helpers/bcrypt";
+import { ObjectId } from "mongodb";
 
 const userSchema = z.object({
   name: z.string(),
@@ -42,6 +43,10 @@ class UserModel {
 
   static async findByUsername(username: string) {
     return await this.collection().findOne({ username });
+  }
+
+  static async findById(id: string) {
+    return await this.collection().findOne({ _id: new ObjectId(id) });
   }
 }
 

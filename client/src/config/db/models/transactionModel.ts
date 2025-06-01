@@ -19,11 +19,14 @@ class TransactionModel {
     return await this.collection().insertOne(newTransaction);
   }
 
-  static async updateStatus(transactionId: string) {
-    if (!ObjectId.isValid(transactionId)) {
-      throw new Error("Invalid transactionId format");
+  static async updateStatus(dataUpdate: {
+    transactionId: string;
+    order_id: string;
+  }) {
+    if (!ObjectId.isValid(dataUpdate.transactionId)) {
+      throw new Error("Invalid dataUpdate.transactionId)) { format");
     }
-    const id = new ObjectId(transactionId);
+    const id = new ObjectId(dataUpdate.transactionId);
 
     return await this.collection().updateOne(
       {
@@ -33,6 +36,7 @@ class TransactionModel {
         $set: {
           status: "success",
           updatedAt: new Date(),
+          order_id: dataUpdate.order_id,
         },
       }
     );
