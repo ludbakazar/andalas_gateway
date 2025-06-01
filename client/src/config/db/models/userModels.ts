@@ -38,6 +38,10 @@ class UserModel {
 
     return await this.collection().insertOne(newUser);
   }
+
+  static async findByUsername(username: string) {
+    return await this.collection().findOne({ username });
+  }
 }
 
 export default UserModel;
