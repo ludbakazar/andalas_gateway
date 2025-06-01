@@ -30,6 +30,7 @@ class UserModel {
       name: userData.name,
       kode: userData.kode,
       email: userData.email,
+      role: "user",
       username: userData.username,
       password: hashPass(userData.password),
       createdAt: new Date(),

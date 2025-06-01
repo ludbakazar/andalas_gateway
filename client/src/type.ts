@@ -1,6 +1,7 @@
 export type newUser = {
   name: string;
   kode: string;
+  role: string;
   email: string;
   username: string;
   password: string;
@@ -20,4 +21,8 @@ export type userType = {
   password: string;
   createdAt: string;
   updatedAt: string;
+};
+
+export type transInput = {
+  totalAmount: number;
 };
